@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import M from "materialize-css/dist/js/materialize.min.js";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { addTech } from "../../actions/techActions";
 
-const AddTechModal = () => {
-  const [firstname, setFirstName] = useState("");
-  const [lastname, setLastName] = useState(false);
+const AddTechModal = ({ addTech }) => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState(false);
 
   const onSubmit = () => {
-    if (firstname === "" || lastname === "") {
+    if (firstName === "" || lastName === "") {
       M.toast({ html: "Please enter the name!" });
     } else {
-      console.log(firstname, lastname);
+      addTech({
+        firstName,
+        lastName,
+      });
+
+      M.toast({ html: `${firstName} ${lastName} was added!` });
       setFirstName("");
       setLastName("");
     }
@@ -24,7 +32,7 @@ const AddTechModal = () => {
             <input
               type="text"
               name="firstname"
-              value={firstname}
+              value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
             <label htmlFor="firstName" className="active">
@@ -37,7 +45,7 @@ const AddTechModal = () => {
             <input
               type="text"
               name="lastname"
-              value={lastname}
+              value={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
             <label htmlFor="lastName" className="active">
@@ -52,11 +60,15 @@ const AddTechModal = () => {
           onClick={onSubmit}
           className="modal-close waves-effect waves-green btn"
         >
-          Edit
+          Enter
         </a>
       </div>
     </div>
   );
 };
 
-export default AddTechModal;
+AddTechModal.propTypes = {
+  addTech: PropTypes.func.isRequired,
+};
+
+export default connect(null, { addTech })(AddTechModal);
